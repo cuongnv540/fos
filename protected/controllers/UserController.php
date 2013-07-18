@@ -1,8 +1,10 @@
 <?php
+
 class UserController extends Controller
 {
+
     /**
-     *@author Cuong
+     * @author Cuong
      */
     public function actionSignIn()
     {
@@ -20,23 +22,31 @@ class UserController extends Controller
                 }
             }
         }
-        $this->render('signin', array('form' => $form ));
+        $this->render('signin', array('form' => $form));
     }
-    /* 
-     *@author Cuong  
+
+    /*
+     * @author Cuong  
      */
+
     private function afterSignIn()
     {
         
     }
+
     /*
      * @author Cuong
      */
+
     public function actionSignUp()
     {
-        $form = new SignUpForm; 
+        $form = new SignUpForm;
+        if (isset($_POST['SignUpForm'])) {
+            $form->attributes = $_POST['SignUpForm'];
+        }
         $this->render('signup', array('form' => $form));
     }
+
     /**
      * @author Nguyen Anh Tien
      */

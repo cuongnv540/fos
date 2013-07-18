@@ -7,6 +7,17 @@ $this->breadcrumbs = array(
 );
 ?>
 
+<?php if (Yii::app()->user->hasFlash('sucessful')): ?>
+    <div class="success alert">
+        <?php echo Yii::app()->user->getFlash('sucessful'); ?>
+    </div>
+<?php endif; ?>
+<?php if (Yii::app()->user->hasFlash('fail')): ?>
+    <div class="danger alert">
+        <?php echo Yii::app()->user->getFlash('fail'); ?>
+    </div>
+<?php endif; ?>
+
 <form method='post'>
     <?php echo CHtml::errorSummary($form); ?>
     <div class="">
