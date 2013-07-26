@@ -51,7 +51,7 @@ if (Yii::app()->user->is_admin) {
     );
 }
 echo '</span>&nbsp';
-if (Yii::app()->user->is_admin || Yii::app()->user->getId() == $user->id) {
+if (Yii::app()->user->getId() == $user->id) {
     echo CHtml::button('Edit Poll', array(
         'class' => 'btn btn-warning',
         'submit' => array(
@@ -288,13 +288,11 @@ if ($poll->display_type == Poll::POLL_DISPLAY_SETTINGS_INVITED_ONLY && Yii::app(
                     );
                     echo "<div class='voter_area' id = 'name_vote_$choice->id'>";
                     for ($k = 0; $k < sizeof($votes); $k++) {
-                        $user_link = $votes[$k]->user->profile->createViewLink();
-                        echo CHtml::link($votes[$k]->user->username, array(
-                            'profile/view',
-                            'id' => $votes[$k]->user->id,
+                        $user_link = $votes[$k]->user->profile->createViewLink(null, array(
                             'class' => 'user_vote',
-                            )
-                        );
+                        ));
+                        echo $user_link;
+                        echo " ";
                     }
                     echo '</div>';
                 }
