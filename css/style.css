@@ -171,6 +171,11 @@ span.user_poll a{
     margin-top: 30px; 
 }
 
+
 .more {
     cursor: pointer;
+}
+
+.voter_area {
+    display: none;
 }
