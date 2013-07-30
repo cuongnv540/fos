@@ -1,21 +1,10 @@
-<script src='<?php echo Yii::app()->baseUrl; ?>/js/comment.js'></script> 
-
+<script src='<?php echo Yii::app()->baseUrl; ?>/js/poll_index.js'></script> 
+<h1>Poll Detail </h1>
+<div style='height:50px;'></div>
 <?php
-Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl.'/css/jquery.countdown.css');
-Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/js/jquery.countdown.js');
-Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/js/countdown.js');
 $this->widget('bootstrap.widgets.TbAlert');
 ?>
-<h1>Poll Detail </h1>
-<div class="row">
-    <div id="countdown"></div>
-    <h4 id="note" style="text-align: center"></h4>
-</div>
 <script>
-    var start = <?php echo strtotime($poll->start_at) ?>;
-    var end = <?php echo strtotime($poll->end_at) ?>;
-    countDown(start * 1000, end * 1000);
-
     $(function() {
         $(".invite").click(function() {
             window.open('index.php?r=poll/addinvite&poll_id=<?php echo $poll->id ?>', 'mywindow', 'width=600,height=400');
@@ -28,6 +17,11 @@ $this->widget('bootstrap.widgets.TbAlert');
         $('.more').click(function(){
             $('.invited').hide();
             $('.hidden_info').toggle(500);
+        });
+        
+        $('.btn-primary').click(function(){
+            var id = "#name_vote_"+$(this).attr('show_vote_');
+            $(id).slideToggle();
         });
     });
 </script>
@@ -135,7 +129,7 @@ if ($poll->display_type == Poll::POLL_DISPLAY_SETTINGS_INVITED_ONLY && Yii::app(
                         break;
                     default:
                         echo ' Invited Only (Only invited user can see and vote) ';
-                        if ($poll->poll_type == Poll::POLL_TYPE_SETTINGS_NON_ANONYMOUS || $poll->user_id == $this->current_user->id) {
+                        if ($poll->poll_type == Poll::POLL_TYPE_SETTINGS_NON_ANONYMOUS) {
                             echo CHtml::button('view invited', array(
                                 'class' => 'view_invited btn btn-primary btn-mini',
                             ));
@@ -201,20 +195,6 @@ if ($poll->display_type == Poll::POLL_DISPLAY_SETTINGS_INVITED_ONLY && Yii::app(
                 ?>
             </td>
         </tr>
-        <tr class='odd hidden_info'>
-            <th></th>
-            <td>
-                <b>Start at:</b>
-                <?php echo $poll->start_at; ?>
-            </td>
-        </tr>
-        <tr class='odd hidden_info'>
-            <th></th>
-            <td>
-                <b>End at :</b>
-                <?php echo $poll->end_at; ?>
-            </td>
-        </tr>
         <tr class='even'>
             <th>Question</th>
             <td><?php echo $poll->question ?></td>
@@ -233,30 +213,30 @@ if ($poll->display_type == Poll::POLL_DISPLAY_SETTINGS_INVITED_ONLY && Yii::app(
         */
         
         $total_votes = 0;
-        foreach ($choices as $c) {
-            $votes = $c->votes;
+        foreach ($choices as $choice) {
+            $votes = $choice->votes;
             $total_votes += sizeof($votes);
         }
 
-        foreach ($choices as $c) {
+        foreach ($choices as $choice) {
             if ($poll->is_multichoice == 1) {
-                echo CHtml::checkBox('choice['.$c->id.']', false, array(
-                    'id' => $c->id,
+                echo CHtml::checkBox('choice['.$choice->id.']', false, array(
+                    'id' => $choice->id,
                     'class' => 'cb',
                     'disabled' => !($can_votes && $voting)
                     )
                 );
             } else {
                 echo CHtml::radioButton('choice', false, array(
-                    'value' => $c->id,
-                    'id' => $c->id,
+                    'value' => $choice->id,
+                    'id' => $choice->id,
                     'class' => 'cb',
                     'disabled' => !($can_votes && $voting)
                     )
                 );
             }
             
-            $votes = $c->votes;
+            $votes = $choice->votes;
             if ($total_votes !== 0) {
                 $percent = sizeof($votes) * 100 / $total_votes;
             } else {
@@ -266,7 +246,7 @@ if ($poll->display_type == Poll::POLL_DISPLAY_SETTINGS_INVITED_ONLY && Yii::app(
             if ($can_show_result) {
                 echo '<div class="bar bar-warning" style="width: ' . $percent . '%;"></div>';
             }
-            echo CHtml::label($c->content, $c->id, 
+            echo CHtml::label($choice->content, $choice->id, 
                 array(
                     'class' => 'content_choice'
                 ));
@@ -275,13 +255,22 @@ if ($poll->display_type == Poll::POLL_DISPLAY_SETTINGS_INVITED_ONLY && Yii::app(
             if ($can_show_result) {
                 echo sizeof($votes);
                 if ($can_show_voter) {
-                    for ($k = 0; $k < sizeof($votes); $k++) {
-                        $user_link = $votes[$k]->user->profile->createViewLink();
-        //                echo $user_link;
-                        echo CHtml::link($votes[$k]->user->username, 'lo', array(
-                            'class' => 'user_vote')
-                        );
-                    }
+                    echo CHtml::button('Show Voter', array(
+                        'class' => 'btn btn-primary',
+                        'show_vote_' => $choice->id,
+                        )
+                    );
+                    echo "<div class='voter_area' id = 'name_vote_$choice->id'>";
+                        for ($k = 0; $k < sizeof($votes); $k++) {
+                            $user_link = $votes[$k]->user->profile->createViewLink();
+                            echo CHtml::link($votes[$k]->user->username, array(
+                                'profile/view',
+                                'id' => $votes[$k]->user->id,
+                                'class' => 'user_vote',
+                                )
+                            );
+                        }
+                    echo '</div>';
                 }
             }
             echo "<div class='clear2'></div>";
@@ -311,14 +300,6 @@ if ($poll->display_type == Poll::POLL_DISPLAY_SETTINGS_INVITED_ONLY && Yii::app(
         }
     ?>
 </form>
-
-<div class="row">
-    <div class="a-comment span7">
-        <textarea class ="span12 comment-textarea" 
-            placeholder="Write a comment..." rows="1" 
-            id="comment-all" wrap="off" style="overflow:hidden"></textarea>
-    </div>
-</div>
 
 <?php
     echo '<div class="comment_area">';
@@ -350,7 +331,15 @@ if ($poll->display_type == Poll::POLL_DISPLAY_SETTINGS_INVITED_ONLY && Yii::app(
                 }
             }
         }
-        echo "<div class='clear2'></div>";        
+        echo "<div class='clear2'></div>";
+        echo CHtml::textArea('your_comment', '', array(
+            'placeholder' => 'type your comment...',
+            'rows' => 1,
+            'class' => 'type_new_comment',
+            'disabled' => ! $voting,
+            )
+         );
+        echo '<hr>';
         echo '</div>';
     echo '</div>';
 ?>

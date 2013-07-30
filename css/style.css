@@ -16,12 +16,16 @@ div.none {
 }
 
 span.poll_note {
-    color: rgb(128, 128, 128);
+    color: #808080;
     font-size: 0.9em;
 }
 
-span.poll_link {
-    font-weight: bold;
+span.user_poll {
+    font-size: 1.1em;
+}
+
+span.user_poll a{    
+    color: red;
 }
 
 .home-content{
@@ -55,6 +59,13 @@ span.poll_link {
 
 .comment_area{
     width: 70%;
+}
+
+.user_poll{
+    font-weight: bold;
+    font-size: 125%;
+    color: #0066ff;
+    margin-right: 5px;
 }
 
 .user_comment{
@@ -118,12 +129,7 @@ span.poll_link {
 }
 
 .poll-summary {
-    margin-top: -9px !important;    
-    color: rgb(51, 51, 51);
-    border-radius: 0px;
-    border-color: rgb(216, 223, 234);       
-    border-width: 0px;
-    border-bottom-width: 1px;
+    margin-top: -7px !important;    
 }
 
 .poll-end {
@@ -148,8 +154,9 @@ span.poll_link {
     border-bottom-width: 1px;
 }
 
-.stream-item a {    
-    font-weight: bold;
+.stream-item a {
+    color: #333;
+    font-weight:bold;
 }
 
 
@@ -158,45 +165,17 @@ span.poll_link {
 }
 
 .content-item {
-    margin-top: -20px;
-    background-color: rgb(255, 255, 255);
-    color: rgb(51, 51, 51);
-    border-radius: 0px;
-    border-color: rgb(216, 223, 234);       
-    border-width: 0px;
-    border-bottom-width: 1px;
+    margin-top: -15px;
 }
-
 .poll-hints {
     margin-top: 30px; 
 }
+
 
 .more {
     cursor: pointer;
 }
 
-.ajax-loading {
-    padding: 10px 0px;    
-    background-color: #EDEFF4;
-    margin: auto;
-}
-
-.ajax-loading-img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-div.end_activity {
-    text-align: center;
-}
-.a-comment {
-    background-color: #EDEFF4;
-    padding: 5px;    
-}
-
-.comment-textarea {    
-    resize: none;    
-    border-radius: 0px;
-    margin-bottom: 0px;
+.voter_area {
+    display: none;
 }
