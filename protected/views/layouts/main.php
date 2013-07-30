@@ -19,10 +19,26 @@
         Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/js/jquery-ui.js');
         Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/js/main.js');
         Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/js/stream_scroll.js');
+        Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/js/jQuery.bubbletip-1.0.6.js');
        ?>
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
     </head>
     <body>
+        <script>
+            $('#a1_down').bubbletip($('#tip1_down'), {
+                deltaDirection: 'down',
+                deltaPosition: 50,
+                offsetTop: 20
+            });
+        </script>
+        <div id="tip1_down" style="display:none;">
+            <pre class="tip">{ 
+            deltaDirection: 'down', 
+            deltaPosition: 100,
+            offsetTop: 10 
+            }</pre>
+        </div>
+        
         <div class="row-fluid" id="page">
             <div id="mainmenu">
                 <?php
@@ -62,7 +78,12 @@
                                         'icon' => 'home white',
                                         'url' => array('profile/view', 'id' => Yii::app()->user->profile_id),
                                     ),
-                                    array('label' => 'Notifications', 'icon' => 'globe white', 'url' => '#'),
+                                    array(
+                                        'id' => 'helo',
+                                        'label' => 'Notifications',
+                                        'icon' => 'globe white',
+                                        'url' => '#',
+                                    ),
                                 ),
                             ),
                             '<form class="navbar-search pull-left" action=""><input type="text"
