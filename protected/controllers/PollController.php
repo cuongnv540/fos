@@ -46,6 +46,16 @@ class PollController extends Controller
      */
     public function actionView($id)
     {
+        $criteria = new CDbCriteria();
+        $criteria->addCondition('receiver_id='.$this->current_user->id, 'AND',
+                                'poll_id=' . $id, 'AND', 'viewed=' . '0'
+        );
+        $notifications = Notification::model()->findAll($criteria);
+        foreach ($notifications as $notification) {
+            $notification->viewed = 1;
+            $notification->update(array('viewed'));
+        }
+        
         $users_invited = User::model()->invitedTo($id, $this->current_user->id)->findAll();
         unset(Yii::app()->session['poll_creating']);
         $poll = Poll::model()->findbyAttributes(array('id' => $id));
